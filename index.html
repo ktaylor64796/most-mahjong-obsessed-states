@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Mahjong Obsession Index Map</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f4f9; }
+        #map-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; }
+        h1 { text-align: center; color: #2c3e50; }
+        p { text-align: center; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+<div id="map-container">
+    <h1>The 2026 Mahjong Obsession Index</h1>
+    <p>Hover over states to see their rank and obsession score.</p>
+    <div id="mahjongMap"></div>
+</div>
+
+<script>
+    // Data for all 50 states + DC from your dataset
+    const stateData = [
+        {code: 'FL', name: 'Florida', index: 100.00, rank: 1},
+        {code: 'PA', name: 'Pennsylvania', index: 95.06, rank: 2},
+        {code: 'CA', name: 'California', index: 94.88, rank: 3},
+        {code: 'MI', name: 'Michigan', index: 94.04, rank: 4},
+        {code: 'TX', name: 'Texas', index: 90.08, rank: 5},
+        {code: 'HI', name: 'Hawaii', index: 86.79, rank: 6},
+        {code: 'NY', name: 'New York', index: 83.56, rank: 7},
+        {code: 'CO', name: 'Colorado', index: 82.63, rank: 8},
+        {code: 'NJ', name: 'New Jersey', index: 81.68, rank: 9},
+        {code: 'OR', name: 'Oregon', index: 81.00, rank: 10},
+        {code: 'WI', name: 'Wisconsin', index: 74.43, rank: 11},
+        {code: 'ME', name: 'Maine', index: 73.06, rank: 12},
+        {code: 'OH', name: 'Ohio', index: 72.60, rank: 13},
+        {code: 'MA', name: 'Massachusetts', index: 70.62, rank: 14},
+        {code: 'IL', name: 'Illinois', index: 69.54, rank: 15},
+        {code: 'AZ', name: 'Arizona', index: 68.61, rank: 16},
+        {code: 'MN', name: 'Minnesota', index: 67.82, rank: 17},
+        {code: 'MD', name: 'Maryland', index: 65.70, rank: 18},
+        {code: 'WA', name: 'Washington', index: 63.30, rank: 19},
+        {code: 'NM', name: 'New Mexico', index: 63.03, rank: 20},
+        {code: 'NH', name: 'New Hampshire', index: 60.44, rank: 21},
+        {code: 'SC', name: 'South Carolina', index: 59.06, rank: 22},
+        {code: 'NV', name: 'Nevada', index: 59.04, rank: 23},
+        {code: 'IN', name: 'Indiana', index: 58.29, rank: 24},
+        {code: 'TN', name: 'Tennessee', index: 58.14, rank: 25},
+        {code: 'NC', name: 'North Carolina', index: 58.11, rank: 26},
+        {code: 'IA', name: 'Iowa', index: 57.57, rank: 27},
+        {code: 'CT', name: 'Connecticut', index: 54.99, rank: 28},
+        {code: 'VA', name: 'Virginia', index: 54.83, rank: 29},
+        {code: 'WV', name: 'West Virginia', index: 53.57, rank: 30},
+        {code: 'GA', name: 'Georgia', index: 53.26, rank: 31},
+        {code: 'VT', name: 'Vermont', index: 51.75, rank: 32},
+        {code: 'MO', name: 'Missouri', index: 50.53, rank: 33},
+        {code: 'OK', name: 'Oklahoma', index: 48.99, rank: 34},
+        {code: 'AL', name: 'Alabama', index: 48.77, rank: 35},
+        {code: 'RI', name: 'Rhode Island', index: 48.76, rank: 36},
+        {code: 'ID', name: 'Idaho', index: 48.53, rank: 37},
+        {code: 'NE', name: 'Nebraska', index: 47.53, rank: 38},
+        {code: 'KS', name: 'Kansas', index: 44.53, rank: 39},
+        {code: 'DE', name: 'Delaware', index: 42.96, rank: 40},
+        {code: 'LA', name: 'Louisiana', index: 42.68, rank: 41},
+        {code: 'MT', name: 'Montana', index: 41.35, rank: 42},
+        {code: 'KY', name: 'Kentucky', index: 40.75, rank: 43},
+        {code: 'AR', name: 'Arkansas', index: 37.11, rank: 44},
+        {code: 'MS', name: 'Mississippi', index: 35.14, rank: 45},
+        {code: 'UT', name: 'Utah', index: 24.14, rank: 46},
+        {code: 'SD', name: 'South Dakota', index: 22.81, rank: 47},
+        {code: 'ND', name: 'North Dakota', index: 20.43, rank: 48},
+        {code: 'WY', name: 'Wyoming', index: 15.81, rank: 49},
+        {code: 'DC', name: 'District of Columbia', index: 7.90, rank: 50},
+        {code: 'AK', name: 'Alaska', index: 0.00, rank: 51}
+    ];
+
+    const locations = stateData.map(d => d.code);
+    const zValues = stateData.map(d => d.index);
+    const textValues = stateData.map(d => `${d.name}<br>Rank: ${d.rank}<br>Index: ${d.index.toFixed(2)}`);
+
+    const data = [{
+        type: 'choropleth',
+        locationmode: 'USA-states',
+        locations: locations,
+        z: zValues,
+        text: textValues,
+        hoverinfo: 'text',
+        colorscale: [
+            [0, '#f7fbff'], [0.2, '#deebf7'], [0.4, '#9ecae1'], 
+            [0.6, '#4292c6'], [0.8, '#08519c'], [1, '#08306b']
+        ],
+        colorbar: { thickness: 15, title: 'Index Score' }
+    }];
+
+    const layout = {
+        geo: { scope: 'usa', projection: { type: 'albers usa' } },
+        margin: { l: 0, r: 0, b: 0, t: 0 }
+    };
+
+    Plotly.newPlot('mahjongMap', data, layout);
+</script>
+
+</body>
+</html>
