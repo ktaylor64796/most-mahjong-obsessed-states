@@ -3,103 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Mahjong Obsession Index Map</title>
+    <title>The Most Mahjong-Obsessed States | Vegas Insider</title>
+    
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f4f9; }
-        #map-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; }
-        h1 { text-align: center; color: #2c3e50; }
-        p { text-align: center; color: #7f8c8d; }
+        /* Vegas Insider Style - Gold & Dark Grey Theme */
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #FDFCF2; color: #333; line-height: 1.6; }
+        .wrapper { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* Title & Branding */
+        header { background-color: #2D2D2D; color: #D4AF37; padding: 20px; text-align: center; border-bottom: 3px solid #D4AF37; margin-bottom: 20px; }
+        header h1 { font-size: 32px; text-transform: uppercase; margin: 0; font-weight: 800; letter-spacing: 1px; }
+        .branding-sub { color: #BBB; font-size: 14px; text-transform: uppercase; }
+
+        /* General Article Styles */
+        h2 { color: #2D2D2D; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: #2D2D2D; margin-top: 25px; }
+        strong { font-weight: 700; color: #000; }
+        p { margin-bottom: 15px; }
+
+        /* Section containers */
+        .section-box { background: #FFF; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+
+        /* The Map & Labels */
+        #map-title { text-align: center; color: #2D2D2D; font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+        #map-subtitle { text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 20px; }
+        #mahjongMap { width: 100%; height: 600px; } /* Large map as requested */
+
+        /* Chart/Grid.js Theme Customization to match Vegas Insider */
+        .gridjs-container { padding: 0; }
+        .gridjs-wrapper { box-shadow: none; border-radius: 4px; border: 1px solid #EAEAEA; }
+        .gridjs-th { background-color: #2D2D2D !important; color: #D4AF37 !important; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; border: 1px solid #444; }
+        .gridjs-td { border: 1px solid #EEE; font-size: 14px; }
+        .gridjs-tr:hover td { background-color: #F9F7E8; }
+        .gridjs-search { width: 100%; }
+        .gridjs-search-input { width: 100%; border: 2px solid #EAEAEA; }
+        
+        /* Method & Footer */
+        .methodology { font-size: 14px; color: #7f8c8d; background: #F9F9F9; padding: 20px; border-radius: 4px; border-left: 4px solid #D4AF37; }
+        footer { text-align: center; padding: 40px; color: #BBB; font-size: 12px; margin-top: 40px; background-color: #2D2D2D; border-top: 3px solid #D4AF37; }
     </style>
 </head>
 <body>
 
-<div id="map-container">
-    <h1>The 2026 Mahjong Obsession Index</h1>
-    <p>Hover over states to see their rank and obsession score.</p>
-    <div id="mahjongMap"></div>
+<header>
+    <h1>2026 Mahjong Obsession Index</h1>
+    <div class="branding-sub">Presented by Vegas Insider</div>
+</header>
+
+<div class="wrapper">
+
+    <div class="section-box">
+        <p>A few years ago, you might have associated mahjong exclusively with smoky parlors in Hong Kong or quiet community centers in Florida. But the ancient tile-based game is currently experiencing a massive cultural resurgence across America. With a growing community of players and a surge in stylish, modern mahjong sets, the game has moved from niche hobby to a nationwide obsession—but where is the mahjong capital of the USA?</p>
+
+        <p>We looked at all 50 states and D.C. and ranked them on a **Mahjong Popularity Index**. Our rating is based on four key metrics: the number of registered mahjong venues, Google search volume interest over the past five years, and the concentration of the sport’s key demographic groups: Asian American and senior populations.</p>
+    </div>
+
+    <div class="section-box">
+        <div id="map-title">Interactive Obsession Map (Ranked 1–51)</div>
+        <div id="map-subtitle">Hover over states to see rank, state name, and Mahjong Index score.</div>
+        <div id="mahjongMap"></div>
+    </div>
+
+    <h2>Most Popular States for Mahjong</h2>
+    
+    <div class="section-box">
+        <p>Curious to see if your area is a hub for "Pungs" and "Chows"? Here are highlights from the most obsessed U.S. states when it comes to mahjong, according to our composite index:</p>
+        
+        <h3>1. Florida (Index Score: 100.00)</h3>
+        <p>Florida is the U.S. state most obsessed with mahjong. With a perfect indexed score, it reigns supreme. Florida boasts a massive **88 registered venues**, largely driven by its high senior population (**21.74%**), a demographic that has long kept the American version of the game alive in social clubs and retirement communities.</p>
+
+        <h3>2. Pennsylvania (Index Score: 95.06)</h3>
+        <p>Ranking second is Pennsylvania. While it has fewer registered venues than Florida, it shows a remarkably high level of curiosity and digital engagement, scoring a strong **57.16/100** in Google Search interest.</p>
+
+        <h3>3. California (Index Score: 94.88)</h3>
+        <p>California takes third. Its obsession is fueled by its cultural diversity; it has the largest raw **Asian Population** total in our top five, which serves as a vital cultural anchor for both traditional and modern variants of the game.</p>
+    </div>
+
+    <h2>Complete Data: Sortable State Rankings</h2>
+    
+    <div class="section-box" id="table-wrapper">
+        <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 20px;">Use the search bar and table headers to sort and explore the raw data for all 51 jurisdictions.</p>
+        <div id="mahjongTable"></div>
+    </div>
+
+    <div class="section-box methodology">
+        <h3>Methodology</h3>
+        <p>To find the most mahjong-obsessed states, we created a weighted **Mahjong Index (0–100)** based on four metrics from April 2026 data:</p>
+        <ul style="margin-bottom: 10px;">
+            <li>**40% - Google Trends (5 Years):** Highest search interest in "Mahjong."</li>
+            <li>**30% - Registered Venues:** Count from the BAM Good Time directory.</li>
+            <li>**20% - Asian Population % (2024):** Cultural proxy.</li>
+            <li>**10% - Senior Population % (2023):** Demographic proxy.</li>
+        </ul>
+        <p>All raw metrics were min-max normalized (0-100) before weighting. The final index was normalized a second time to anchor the top state at exactly 100 and the bottom jurisdiction at exactly 0, allowing for clear comparative scoring.</p>
+    </div>
+
 </div>
 
+<footer>
+    © 2026 Vegas Insider. This study is an independent demographic and behavioral analysis.
+</footer>
+
 <script>
-    // Data for all 50 states + DC from your dataset
-    const stateData = [
-        {code: 'FL', name: 'Florida', index: 100.00, rank: 1},
-        {code: 'PA', name: 'Pennsylvania', index: 95.06, rank: 2},
-        {code: 'CA', name: 'California', index: 94.88, rank: 3},
-        {code: 'MI', name: 'Michigan', index: 94.04, rank: 4},
-        {code: 'TX', name: 'Texas', index: 90.08, rank: 5},
-        {code: 'HI', name: 'Hawaii', index: 86.79, rank: 6},
-        {code: 'NY', name: 'New York', index: 83.56, rank: 7},
-        {code: 'CO', name: 'Colorado', index: 82.63, rank: 8},
-        {code: 'NJ', name: 'New Jersey', index: 81.68, rank: 9},
-        {code: 'OR', name: 'Oregon', index: 81.00, rank: 10},
-        {code: 'WI', name: 'Wisconsin', index: 74.43, rank: 11},
-        {code: 'ME', name: 'Maine', index: 73.06, rank: 12},
-        {code: 'OH', name: 'Ohio', index: 72.60, rank: 13},
-        {code: 'MA', name: 'Massachusetts', index: 70.62, rank: 14},
-        {code: 'IL', name: 'Illinois', index: 69.54, rank: 15},
-        {code: 'AZ', name: 'Arizona', index: 68.61, rank: 16},
-        {code: 'MN', name: 'Minnesota', index: 67.82, rank: 17},
-        {code: 'MD', name: 'Maryland', index: 65.70, rank: 18},
-        {code: 'WA', name: 'Washington', index: 63.30, rank: 19},
-        {code: 'NM', name: 'New Mexico', index: 63.03, rank: 20},
-        {code: 'NH', name: 'New Hampshire', index: 60.44, rank: 21},
-        {code: 'SC', name: 'South Carolina', index: 59.06, rank: 22},
-        {code: 'NV', name: 'Nevada', index: 59.04, rank: 23},
-        {code: 'IN', name: 'Indiana', index: 58.29, rank: 24},
-        {code: 'TN', name: 'Tennessee', index: 58.14, rank: 25},
-        {code: 'NC', name: 'North Carolina', index: 58.11, rank: 26},
-        {code: 'IA', name: 'Iowa', index: 57.57, rank: 27},
-        {code: 'CT', name: 'Connecticut', index: 54.99, rank: 28},
-        {code: 'VA', name: 'Virginia', index: 54.83, rank: 29},
-        {code: 'WV', name: 'West Virginia', index: 53.57, rank: 30},
-        {code: 'GA', name: 'Georgia', index: 53.26, rank: 31},
-        {code: 'VT', name: 'Vermont', index: 51.75, rank: 32},
-        {code: 'MO', name: 'Missouri', index: 50.53, rank: 33},
-        {code: 'OK', name: 'Oklahoma', index: 48.99, rank: 34},
-        {code: 'AL', name: 'Alabama', index: 48.77, rank: 35},
-        {code: 'RI', name: 'Rhode Island', index: 48.76, rank: 36},
-        {code: 'ID', name: 'Idaho', index: 48.53, rank: 37},
-        {code: 'NE', name: 'Nebraska', index: 47.53, rank: 38},
-        {code: 'KS', name: 'Kansas', index: 44.53, rank: 39},
-        {code: 'DE', name: 'Delaware', index: 42.96, rank: 40},
-        {code: 'LA', name: 'Louisiana', index: 42.68, rank: 41},
-        {code: 'MT', name: 'Montana', index: 41.35, rank: 42},
-        {code: 'KY', name: 'Kentucky', index: 40.75, rank: 43},
-        {code: 'AR', name: 'Arkansas', index: 37.11, rank: 44},
-        {code: 'MS', name: 'Mississippi', index: 35.14, rank: 45},
-        {code: 'UT', name: 'Utah', index: 24.14, rank: 46},
-        {code: 'SD', name: 'South Dakota', index: 22.81, rank: 47},
-        {code: 'ND', name: 'North Dakota', index: 20.43, rank: 48},
-        {code: 'WY', name: 'Wyoming', index: 15.81, rank: 49},
-        {code: 'DC', name: 'District of Columbia', index: 7.90, rank: 50},
-        {code: 'AK', name: 'Alaska', index: 0.00, rank: 51}
+    // --- 1. The Raw Data Array (Using OG data provided) ---
+    const mahjongData = [
+        [1, 'Florida', '88', 43.27, 3.75, 21.74, 100.00, 'FL'],
+        [2, 'Pennsylvania', '51', 57.16, 4.68, 20.03, 95.06, 'PA'],
+        [3, 'California', '70', 46.94, 18.21, 16.20, 94.88, 'CA'],
+        [4, 'Michigan', '15', 52.24, 4.30, 19.20, 94.04, 'MI'],
+        [5, 'Texas', '113', 35.26, 6.24, 13.73, 90.08, 'TX'],
+        [6, 'Hawaii', '2', 40.15, 57.59, 21.08, 86.79, 'HI'],
+        [7, 'New York', '49', 48.01, 10.27, 18.57, 83.56, 'NY'],
+        [8, 'Colorado', '14', 44.32, 4.84, 16.04, 82.63, 'CO'],
+        [9, 'New Jersey', '56', 44.31, 11.11, 17.74, 81.68, 'NJ'],
+        [10, 'Oregon', '2', 66.50, 6.78, 19.59, 81.00, 'OR'],
+        [11, 'Wisconsin', '20', 56.08, 3.79, 19.11, 74.43, 'WI'],
+        [12, 'Maine', '12', 53.80, 1.86, 22.99, 73.06, 'ME'],
+        [13, 'Ohio', '28', 52.06, 3.32, 18.74, 72.60, 'OH'],
+        [14, 'Massachusetts', '38', 43.76, 8.42, 18.48, 70.62, 'MA'],
+        [15, 'Illinois', '39', 44.59, 7.09, 17.56, 69.54, 'IL'],
+        [16, 'Arizona', '18', 51.42, 4.99, 19.30, 68.61, 'AZ'],
+        [17, 'Minnesota', '22', 50.61, 6.16, 17.83, 67.82, 'MN'],
+        [18, 'Maryland', '16', 51.33, 8.02, 17.25, 65.70, 'MD'],
+        [19, 'Washington', '10', 49.72, 12.40, 17.12, 63.30, 'WA'],
+        [20, 'New Mexico', '4', 53.57, 2.73, 19.80, 63.03, 'NM'],
+        [21, 'New Hampshire', '8', 47.89, 3.60, 20.79, 60.44, 'NH'],
+        [22, 'South Carolina', '34', 38.60, 2.36, 19.32, 59.06, 'SC'],
+        [23, 'Nevada', '8', 47.39, 11.40, 17.40, 59.04, 'NV'],
+        [24, 'Indiana', '14', 49.17, 3.26, 17.18, 58.29, 'IN'],
+        [25, 'Tennessee', '37', 39.31, 2.49, 17.43, 58.14, 'TN'],
+        [26, 'North Carolina', '36', 38.67, 3.98, 17.61, 58.11, 'NC'],
+        [27, 'Iowa', '5', 50.47, 3.27, 18.58, 57.57, 'IA'],
+        [28, 'Connecticut', '15', 41.87, 5.82, 19.10, 54.99, 'CT'],
+        [29, 'Virginia', '19', 41.37, 8.45, 17.20, 54.83, 'VA'],
+        [30, 'West Virginia', '1', 45.77, 1.24, 21.51, 53.57, 'WV'],
+        [31, 'Georgia', '48', 32.26, 5.28, 15.38, 53.26, 'GA'],
+        [32, 'Vermont', '12', 37.93, 2.73, 22.11, 51.75, 'VT'],
+        [33, 'Missouri', '12', 42.44, 2.90, 18.34, 50.53, 'MO'],
+        [34, 'Oklahoma', '16', 41.87, 3.26, 16.62, 48.99, 'OK'],
+        [35, 'Alabama', '31', 33.61, 2.00, 18.25, 48.77, 'AL'],
+        [36, 'Rhode Island', '5', 41.75, 4.45, 19.30, 48.76, 'RI'],
+        [37, 'Idaho', '2', 46.78, 2.56, 17.36, 48.53, 'ID'],
+        [38, 'Nebraska', '3', 45.37, 3.44, 17.16, 47.53, 'NE'],
+        [39, 'Kansas', '7', 40.56, 3.97, 17.46, 44.53, 'KS'],
+        [40, 'Delaware', '6', 33.63, 4.94, 21.25, 42.96, 'DE'],
+        [41, 'Louisiana', '22', 33.80, 2.35, 17.35, 42.68, 'LA'],
+        [42, 'Montana', '3', 36.62, 1.66, 20.48, 41.35, 'MT'],
+        [43, 'Kentucky', '10', 36.78, 2.22, 17.82, 40.75, 'KY'],
+        [44, 'Arkansas', '16', 31.18, 2.21, 17.97, 37.11, 'AR'],
+        [45, 'Mississippi', '15', 30.97, 1.52, 17.61, 35.14, 'MS'],
+        [46, 'Utah', '8', 32.03, 3.79, 12.21, 24.14, 'UT'],
+        [47, 'South Dakota', '2', 25.42, 2.11, 18.37, 22.81, 'SD'],
+        [48, 'North Dakota', '3', 24.98, 2.36, 17.01, 20.43, 'ND'],
+        [49, 'Wyoming', '2', 19.05, 1.64, 19.15, 15.81, 'WY'],
+        [50, 'District of Columbia', '2', 19.38, 5.99, 13.07, 7.90, 'DC'],
+        [51, 'Alaska', '2', 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    const locations = stateData.map(d => d.code);
-    const zValues = stateData.map(d => d.index);
-    const textValues = stateData.map(d => `${d.name}<br>Rank: ${d.rank}<br>Index: ${d.index.toFixed(2)}`);
+    // --- 2. Initialize the Sortable Grid.js Table ---
+    new gridjs.Grid({
+        columns: [
+            { name: 'Rank', sort: true },
+            { name: 'State', sort: true },
+            { name: 'Venues', sort: true },
+            { name: 'Avg Search Interest (0-100)', sort: true },
+            { name: 'Asian Population %', sort: true },
+            { name: 'Senior Population %', sort: true },
+            { name: 'Mahjong Popularity Index', sort: true }
+        ],
+        data: mahjongData.map(row => row.slice(0, 7)), // Only use first 7 columns for table
+        search: true, // Adds search functionality
+        pagination: { limit: 15 }, // Adds pagination
+        style: { table: { border: 'none' } }
+    }).render(document.getElementById("mahjongTable"));
 
-    const data = [{
+    // --- 3. Initialize the Plotly Choropleth Map with Labels ---
+    
+    // Sort data for map coloring (ascending, so the gradient is purple -> yellow)
+    const mapSortedData = [...mahjongData].sort((a, b) => a[6] - b[6]);
+
+    const locations = mapSortedData.map(d => d[7]); // State codes (AL, FL, etc)
+    const zValues = mapSortedData.map(d => d[6]); // Index scores
+    const textValues = mapSortedData.map(d => `${d[1]}<br>Rank: ${d[0]}<br>Index Score: ${d[6].toFixed(2)}`); // Hover text
+    const rankLabels = mapSortedData.map(d => `${d[0]}`); // Label text (ranks)
+
+    // Generate label positions using coordinates for clarity (prevents clutter)
+    const annotationsData = mapSortedData.map(d => {
+        return {
+            locationmode: 'USA-states',
+            locations: [d[7]],
+            text: [d[0]], // Display the Rank
+            font: { size: 10, color: 'black' },
+            showarrow: false,
+            // Small states/NE need offsets for their labels
+            ...(d[7] === 'DC' ? { y: 3.5, x: 100 } : {}),
+            ...(d[7] === 'DE' ? { y: 1.5, x: 50 } : {}),
+            ...(d[7] === 'RI' ? { y: 0.5, x: 25 } : {}),
+            ...(d[7] === 'HI' ? { y: -2 } : {}),
+        };
+    });
+
+    const plotData = [{
         type: 'choropleth',
         locationmode: 'USA-states',
         locations: locations,
         z: zValues,
         text: textValues,
         hoverinfo: 'text',
+        // Vegas Insider gold colorscale
         colorscale: [
-            [0, '#f7fbff'], [0.2, '#deebf7'], [0.4, '#9ecae1'], 
-            [0.6, '#4292c6'], [0.8, '#08519c'], [1, '#08306b']
+            [0, '#FDFCF2'], // Off-white/low
+            [0.2, '#EEE5AE'], 
+            [0.4, '#EBCB6B'], 
+            [0.6, '#D4AF37'], // Vegas Insider Gold
+            [0.8, '#C5A031'], 
+            [1, '#2D2D2D'] // Dark Grey/highest
         ],
-        colorbar: { thickness: 15, title: 'Index Score' }
+        colorbar: { 
+            thickness: 15, 
+            title: 'Index Score', 
+            ticksuffix: '',
+            titleside: 'bottom',
+            outlinewidth: 1,
+            outlinecolor: '#444'
+        }
     }];
 
-    const layout = {
-        geo: { scope: 'usa', projection: { type: 'albers usa' } },
-        margin: { l: 0, r: 0, b: 0, t: 0 }
+    const plotLayout = {
+        geo: { 
+            scope: 'usa', 
+            projection: { type: 'albers usa' },
+            lakecolor: '#FDFCF2',
+            showlakes: true,
+            subunitcolor: '#EAEAEA',
+            countrycolor: '#444'
+        },
+        margin: { l: 0, r: 0, b: 0, t: 0 },
+        annotations: annotationsData // Adds the Rank labels
     };
 
-    Plotly.newPlot('mahjongMap', data, layout);
+    Plotly.newPlot('mahjongMap', plotData, plotLayout, {responsive: true});
 </script>
 
 </body>
