@@ -5,39 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Most Mahjong Obsessed States | Vegas Insider</title>
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #1a1a1a; color: #ffffff; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #f8f9fa; color: #333; }
         .container { max-width: 1100px; margin: 0 auto; }
-        header { text-align: center; padding: 30px 0; background: linear-gradient(180deg, #333, #000); border-bottom: 4px solid #d4af37; margin-bottom: 30px; }
-        h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
-        .sub-brand { color: #ccc; font-size: 14px; margin-top: 5px; }
+        header { text-align: center; padding: 20px 0; background-color: #222; border-bottom: 4px solid #d4af37; margin-bottom: 30px; border-radius: 8px 8px 0 0; }
+        h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; font-size: 28px; }
+        .sub-brand { color: #aaa; font-size: 12px; margin-top: 5px; text-transform: uppercase; }
         
-        .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; }
-        
-        /* Map Container must have a height */
-        #map { height: 600px; width: 100%; background: #222; border-radius: 4px; border: 1px solid #d4af37; }
-        
-        /* Clean Labels */
-        .state-rank-label {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            font-family: 'Arial Black', sans-serif;
-            font-size: 11px;
-            color: #000000 !important;
-            text-shadow: 0 0 2px #fff; /* Makes it pop against the gold */
-            pointer-events: none;
-        }
-        
-        .tiny-state-label { color: #ffffff !important; text-shadow: 0 0 2px #000; }
+        .box { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        #mahjongMap { width: 100%; height: 600px; }
 
-        /* Table Customization */
-        .gridjs-container { color: #333; margin-top: 10px; }
-        .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; text-transform: uppercase; }
-        .gridjs-td { background-color: #f9f9f9; }
+        /* Table Styling */
+        .gridjs-container { color: #333; }
+        .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; }
+        .gridjs-td { font-size: 14px; }
     </style>
 </head>
 <body>
@@ -45,11 +30,11 @@
 <div class="container">
     <header>
         <h1>Most Mahjong Obsessed States</h1>
-        <div class="sub-brand">VEGAS INSIDER DATA ANALYTICS</div>
+        <div class="sub-brand">Vegas Insider Data Analytics • 2026</div>
     </header>
 
     <div class="box">
-        <div id="map"></div>
+        <div id="mahjongMap"></div>
     </div>
 
     <div class="box">
@@ -57,94 +42,97 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
-
 <script>
-    // 1. FULL DATASET (51 States/DC)
-    const fullData = [
-        [1, 'Florida', '88', 43.27, 3.75, 21.74, 100.00], [2, 'Pennsylvania', '51', 57.16, 4.68, 20.03, 95.06],
-        [3, 'California', '70', 46.94, 18.21, 16.20, 94.88], [4, 'Michigan', '15', 52.24, 4.30, 19.20, 94.04],
-        [5, 'Texas', '113', 35.26, 6.24, 13.73, 90.08], [6, 'Hawaii', '2', 40.15, 57.59, 21.08, 86.79],
-        [7, 'New York', '49', 48.01, 10.27, 18.57, 83.56], [8, 'Colorado', '14', 44.32, 4.84, 16.04, 82.63],
-        [9, 'New Jersey', '56', 44.31, 11.11, 17.74, 81.68], [10, 'Oregon', '2', 66.50, 6.78, 19.59, 81.00],
-        [11, 'Wisconsin', '20', 56.08, 3.79, 19.11, 74.43], [12, 'Maine', '12', 53.80, 1.86, 22.99, 73.06],
-        [13, 'Ohio', '28', 52.06, 3.32, 18.74, 72.60], [14, 'Massachusetts', '38', 43.76, 8.42, 18.48, 70.62],
-        [15, 'Illinois', '39', 44.59, 7.09, 17.56, 69.54], [16, 'Arizona', '18', 51.42, 4.99, 19.30, 68.61],
-        [17, 'Minnesota', '22', 50.61, 6.16, 17.83, 67.82], [18, 'Maryland', '16', 51.33, 8.02, 17.25, 65.70],
-        [19, 'Washington', '10', 49.72, 12.40, 17.12, 63.30], [20, 'New Mexico', '4', 53.57, 2.73, 19.80, 63.03],
-        [21, 'New Hampshire', '8', 47.89, 3.60, 20.79, 60.44], [22, 'South Carolina', '34', 38.60, 2.36, 19.32, 59.06],
-        [23, 'Nevada', '8', 47.39, 11.40, 17.40, 59.04], [24, 'Indiana', '14', 49.17, 3.26, 17.18, 58.29],
-        [25, 'Tennessee', '37', 39.31, 2.49, 17.43, 58.14], [26, 'North Carolina', '36', 38.67, 3.98, 17.61, 58.11],
-        [27, 'Iowa', '5', 50.47, 3.27, 18.58, 57.57], [28, 'Connecticut', '15', 41.87, 5.82, 19.10, 54.99],
-        [29, 'Virginia', '19', 41.37, 8.45, 17.20, 54.83], [30, 'West Virginia', '1', 45.77, 1.24, 21.51, 53.57],
-        [31, 'Georgia', '48', 32.26, 5.28, 15.38, 53.26], [32, 'Vermont', '12', 37.93, 2.73, 22.11, 51.75],
-        [33, 'Missouri', '12', 42.44, 2.90, 18.34, 50.53], [34, 'Oklahoma', '16', 41.87, 3.26, 16.62, 48.99],
-        [35, 'Alabama', '31', 33.61, 2.00, 18.25, 48.77], [36, 'Rhode Island', '5', 41.75, 4.45, 19.30, 48.76],
-        [37, 'Idaho', '2', 46.78, 2.56, 17.36, 48.53], [38, 'Nebraska', '3', 45.37, 3.44, 17.16, 47.53],
-        [39, 'Kansas', '7', 40.56, 3.97, 17.46, 44.53], [40, 'Delaware', '6', 33.63, 4.94, 21.25, 42.96],
-        [41, 'Louisiana', '22', 33.80, 2.35, 17.35, 42.68], [42, 'Montana', '3', 36.62, 1.66, 20.48, 41.35],
-        [43, 'Kentucky', '10', 36.78, 2.22, 17.82, 40.75], [44, 'Arkansas', '16', 31.18, 2.21, 17.97, 37.11],
-        [45, 'Mississippi', '15', 30.97, 1.52, 17.61, 35.14], [46, 'Utah', '8', 32.03, 3.79, 12.21, 24.14],
-        [47, 'South Dakota', '2', 25.42, 2.11, 18.37, 22.81], [48, 'North Dakota', '3', 24.98, 2.36, 17.01, 20.43],
-        [49, 'Wyoming', '2', 19.05, 1.64, 19.15, 15.81], [50, 'District of Columbia', '2', 19.38, 5.99, 13.07, 7.90],
-        [51, 'Alaska', '2', 9.52, 9.14, 14.36, 0.00]
+    const rawData = [
+        [1, 'Florida', 88, 43.27, 3.75, 21.74, 100.00, 'FL'], [2, 'Pennsylvania', 51, 57.16, 4.68, 20.03, 95.06, 'PA'],
+        [3, 'California', 70, 46.94, 18.21, 16.20, 94.88, 'CA'], [4, 'Michigan', 15, 52.24, 4.30, 19.20, 94.04, 'MI'],
+        [5, 'Texas', 113, 35.26, 6.24, 13.73, 90.08, 'TX'], [6, 'Hawaii', 2, 40.15, 57.59, 21.08, 86.79, 'HI'],
+        [7, 'New York', 49, 48.01, 10.27, 18.57, 83.56, 'NY'], [8, 'Colorado', 14, 44.32, 4.84, 16.04, 82.63, 'CO'],
+        [9, 'New Jersey', 56, 44.31, 11.11, 17.74, 81.68, 'NJ'], [10, 'Oregon', 2, 66.50, 6.78, 19.59, 81.00, 'OR'],
+        [11, 'Wisconsin', 20, 56.08, 3.79, 19.11, 74.43, 'WI'], [12, 'Maine', 12, 53.80, 1.86, 22.99, 73.06, 'ME'],
+        [13, 'Ohio', 28, 52.06, 3.32, 18.74, 72.60, 'OH'], [14, 'Massachusetts', 38, 43.76, 8.42, 18.48, 70.62, 'MA'],
+        [15, 'Illinois', 39, 44.59, 7.09, 17.56, 69.54, 'IL'], [16, 'Arizona', 18, 51.42, 4.99, 19.30, 68.61, 'AZ'],
+        [17, 'Minnesota', 22, 50.61, 6.16, 17.83, 67.82, 'MN'], [18, 'Maryland', 16, 51.33, 8.02, 17.25, 65.70, 'MD'],
+        [19, 'Washington', 10, 49.72, 12.40, 17.12, 63.30, 'WA'], [20, 'New Mexico', 4, 53.57, 2.73, 19.80, 63.03, 'NM'],
+        [21, 'New Hampshire', 8, 47.89, 3.60, 20.79, 60.44, 'NH'], [22, 'South Carolina', 34, 38.60, 2.36, 19.32, 59.06, 'SC'],
+        [23, 'Nevada', 8, 47.39, 11.40, 17.40, 59.04, 'NV'], [24, 'Indiana', 14, 49.17, 3.26, 17.18, 58.29, 'IN'],
+        [25, 'Tennessee', 37, 39.31, 2.49, 17.43, 58.14, 'TN'], [26, 'North Carolina', 36, 38.67, 3.98, 17.61, 58.11, 'NC'],
+        [27, 'Iowa', 5, 50.47, 3.27, 18.58, 57.57, 'IA'], [28, 'Connecticut', 15, 41.87, 5.82, 19.10, 54.99, 'CT'],
+        [29, 'Virginia', 19, 41.37, 8.45, 17.20, 54.83, 'VA'], [30, 'West Virginia', 1, 45.77, 1.24, 21.51, 53.57, 'WV'],
+        [31, 'Georgia', 48, 32.26, 5.28, 15.38, 53.26, 'GA'], [32, 'Vermont', 12, 37.93, 2.73, 22.11, 51.75, 'VT'],
+        [33, 'Missouri', 12, 42.44, 2.90, 18.34, 50.53, 'MO'], [34, 'Oklahoma', 16, 41.87, 3.26, 16.62, 48.99, 'OK'],
+        [35, 'Alabama', 31, 33.61, 2.00, 18.25, 48.77, 'AL'], [36, 'Rhode Island', 5, 41.75, 4.45, 19.30, 48.76, 'RI'],
+        [37, 'Idaho', 2, 46.78, 2.56, 17.36, 48.53, 'ID'], [38, 'Nebraska', 3, 45.37, 3.44, 17.16, 47.53, 'NE'],
+        [39, 'Kansas', 7, 40.56, 3.97, 17.46, 44.53, 'KS'], [40, 'Delaware', 6, 33.63, 4.94, 21.25, 42.96, 'DE'],
+        [41, 'Louisiana', 22, 33.80, 2.35, 17.35, 42.68, 'LA'], [42, 'Montana', 3, 36.62, 1.66, 20.48, 41.35, 'MT'],
+        [43, 'Kentucky', 10, 36.78, 2.22, 17.82, 40.75, 'KY'], [44, 'Arkansas', 16, 31.18, 2.21, 17.97, 37.11, 'AR'],
+        [45, 'Mississippi', 15, 30.97, 1.52, 17.61, 35.14, 'MS'], [46, 'Utah', 8, 32.03, 3.79, 12.21, 24.14, 'UT'],
+        [47, 'South Dakota', 2, 25.42, 2.11, 18.37, 22.81, 'SD'], [48, 'North Dakota', 3, 24.98, 2.36, 17.01, 20.43, 'ND'],
+        [49, 'Wyoming', 2, 19.05, 1.64, 19.15, 15.81, 'WY'], [50, 'District of Columbia', 2, 19.38, 5.99, 13.07, 7.90, 'DC'],
+        [51, 'Alaska', 2, 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    const statsObj = {};
-    fullData.forEach(d => { statsObj[d[1]] = {rank: d[0], score: d[6]}; });
+    // Map logic
+    const locations = rawData.map(d => d[7]);
+    const zValues = rawData.map(d => d[6]);
+    const hoverTexts = rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index Score: ${d[6]}`);
 
-    // 2. Initialize Map with Tile Layer
-    var map = L.map('map', { 
-        zoomControl: false, 
-        dragging: true,
-        attributionControl: false 
-    }).setView([37.8, -96], 4);
+    // Main Map Data
+    const data = [{
+        type: 'choropleth',
+        locationmode: 'USA-states',
+        locations: locations,
+        z: zValues,
+        text: hoverTexts,
+        hoverinfo: 'text',
+        colorscale: [
+            [0, '#e5e5e5'], // Light grey for low index
+            [0.25, '#d4af37'], // Gold
+            [1, '#222'] // Dark for high obsession
+        ],
+        marker: { line: { color: 'white', width: 1.5 } },
+        colorbar: { title: 'Index Score', thickness: 20 }
+    }];
 
-    // Dark Tile Layer (prevents gray void)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 19
-    }).addTo(map);
+    // This section MANUALLY places the rank numbers as annotations. 
+    // This is the only way to avoid the "Black Spots" and ensure tiny states look right.
+    const annotations = rawData.map(d => {
+        let stateCode = d[7];
+        let rank = d[0];
+        
+        // Skip tiny states to handle separately below
+        if (['RI', 'DE', 'DC', 'HI', 'AK'].includes(stateCode)) return null;
 
-    function getColor(d) {
-        return d > 90 ? '#ffdf00' : d > 70 ? '#d4af37' : d > 50 ? '#8c732b' : d > 30 ? '#5c5c5c' : '#3a3a3a';
-    }
+        return {
+            locationmode: 'USA-states',
+            locations: [stateCode],
+            text: rank,
+            showarrow: false,
+            font: { size: 10, color: 'white', family: 'Arial Black' }
+        };
+    }).filter(a => a !== null);
 
-    // Load Geometry and Handle Labels
-    fetch('https://raw.githubusercontent.com/PublicaMundi/MappingPython/master/data/us_states.json')
-    .then(res => res.json())
-    .then(geoData => {
-        L.geoJson(geoData, {
-            style: function(f) {
-                var s = statsObj[f.properties.name] ? statsObj[f.properties.name].score : 0;
-                return { fillColor: getColor(s), weight: 1.5, opacity: 1, color: 'white', fillOpacity: 0.95 };
-            },
-            onEachFeature: function(f, layer) {
-                var name = f.properties.name;
-                if (statsObj[name]) {
-                    var rank = statsObj[name].rank;
-                    var center = layer.getBounds().getCenter();
-                    
-                    // Specific Nudges for readability
-                    var className = 'state-rank-label';
-                    if (["Rhode Island", "Delaware", "District of Columbia"].includes(name)) {
-                        className += ' tiny-state-label';
-                    }
+    // Manually nudging the small/off-shore states
+    annotations.push(
+        { xref: 'paper', yref: 'paper', x: 0.92, y: 0.58, text: '36 (RI)', showarrow: false, font: {size: 9} },
+        { xref: 'paper', yref: 'paper', x: 0.90, y: 0.52, text: '40 (DE)', showarrow: false, font: {size: 9} },
+        { xref: 'paper', yref: 'paper', x: 0.88, y: 0.46, text: '50 (DC)', showarrow: false, font: {size: 9} },
+        { xref: 'paper', yref: 'paper', x: 0.20, y: 0.15, text: '51 (AK)', showarrow: false, font: {size: 9} },
+        { xref: 'paper', yref: 'paper', x: 0.35, y: 0.10, text: '6 (HI)', showarrow: false, font: {size: 9} }
+    );
 
-                    layer.bindTooltip(rank.toString(), { 
-                        permanent: true, direction: 'center', className: className 
-                    }).openTooltip();
-                }
-            }
-        }).addTo(map);
-    })
-    .catch(err => console.error("Map Data Failed:", err));
+    const layout = {
+        geo: { scope: 'usa', projection: { type: 'albers usa' }, bgcolor: 'rgba(0,0,0,0)' },
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        annotations: annotations
+    };
 
-    // 3. Complete Sortable Table
+    Plotly.newPlot('mahjongMap', data, layout, {responsive: true});
+
+    // Table logic - Using ALL 51 states
     new gridjs.Grid({
         columns: ['Rank', 'State', 'Venues', 'Search Interest', 'Asian %', 'Senior %', 'Final Index'],
-        data: fullData,
+        data: rawData.map(r => r.slice(0, 7)),
         search: true,
         sort: true,
         pagination: { limit: 15 }
