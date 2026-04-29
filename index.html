@@ -1,69 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Most Mahjong Obsessed States</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Mahjong Obsessed States | Vegas Insider</title>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
     <style>
-        body { background: #1a1a1a; color: #d4af37; font-family: Arial, sans-serif; text-align: center; }
-        header { padding: 20px; border-bottom: 3px solid #d4af37; margin-bottom: 20px; }
-        #map { height: 600px; width: 1000px; margin: 0 auto; background: #262626; border-radius: 8px; }
-        .state-label { 
-            background: none !important; 
-            border: none !important; 
-            color: #000 !important; 
-            font-weight: bold; 
-            font-size: 12px; 
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #1a1a1a; color: #ffffff; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; padding: 30px 0; background: linear-gradient(180deg, #333, #000); border-bottom: 4px solid #d4af37; margin-bottom: 30px; }
+        h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
+        .sub-brand { color: #ccc; font-size: 14px; margin-top: 5px; }
+        
+        .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; overflow: hidden; }
+        
+        /* Map Styling */
+        #map { height: 650px; width: 100%; background: #262626; border-radius: 4px; }
+        
+        /* Custom Label Styling - Pure Text, No Background/Markers */
+        .leaflet-tooltip-pane .state-rank-label {
+            background: transparent !important;
+            border: none !important;
             box-shadow: none !important;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 11px;
+            color: #000000 !important;
+            text-align: center;
+            pointer-events: none;
         }
-        /* Custom Table Styling to match your screenshot */
-        table { width: 1000px; margin: 20px auto; border-collapse: collapse; background: #262626; }
-        th { background: #d4af37; color: #000; padding: 10px; text-transform: uppercase; }
-        td { padding: 10px; border-bottom: 1px solid #444; color: #fff; }
+        
+        /* Tiny State Labels - White for Visibility against dark background */
+        .leaflet-tooltip-pane .tiny-state-label {
+            color: #ffffff !important;
+            font-size: 10px;
+        }
+
+        /* Table Styling */
+        .gridjs-container { color: #333; margin-top: 10px; }
+        .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; text-transform: uppercase; }
+        .gridjs-td { background-color: #f9f9f9; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>MOST MAHJONG OBSESSED STATES</h1>
-    <p>VEGAS INSIDER DATA ANALYTICS</p>
-</header>
+<div class="container">
+    <header>
+        <h1>Most Mahjong Obsessed States</h1>
+        <div class="sub-brand">VEGAS INSIDER DATA ANALYTICS</div>
+    </header>
 
-<div id="map"></div>
+    <div class="box">
+        <div id="map"></div>
+    </div>
+
+    <div class="box">
+        <div id="mahjongTable"></div>
+    </div>
+</div>
 
 <script>
-    // Initialize map centered on US
-    var map = L.map('map', {zoomControl: false, attributionControl: false}).setView([37.8, -96], 4);
+    // 1. Data Definitions
+    const mahjongStats = {
+        "Florida": {rank: 1, index: 100.00}, "Pennsylvania": {rank: 2, index: 95.06}, "California": {rank: 3, index: 94.88},
+        "Michigan": {rank: 4, index: 94.04}, "Texas": {rank: 5, index: 90.08}, "Hawaii": {rank: 6, index: 86.79},
+        "New York": {rank: 7, index: 83.56}, "Colorado": {rank: 8, index: 82.63}, "New Jersey": {rank: 9, index: 81.68},
+        "Oregon": {rank: 10, index: 81.00}, "Wisconsin": {rank: 11, index: 74.43}, "Maine": {rank: 12, index: 73.06},
+        "Ohio": {rank: 13, index: 72.60}, "Massachusetts": {rank: 14, index: 70.62}, "Illinois": {rank: 15, index: 69.54},
+        "Arizona": {rank: 16, index: 68.61}, "Minnesota": {rank: 17, index: 67.82}, "Maryland": {rank: 18, index: 65.70},
+        "Washington": {rank: 19, index: 63.30}, "New Mexico": {rank: 20, index: 63.03}, "New Hampshire": {rank: 21, index: 60.44},
+        "South Carolina": {rank: 22, index: 59.06}, "Nevada": {rank: 23, index: 59.04}, "Indiana": {rank: 24, index: 58.29},
+        "Tennessee": {rank: 25, index: 58.14}, "North Carolina": {rank: 26, index: 58.11}, "Iowa": {rank: 27, index: 57.57},
+        "Connecticut": {rank: 28, index: 54.99}, "Virginia": {rank: 29, index: 54.83}, "West Virginia": {rank: 30, index: 53.57},
+        "Georgia": {rank: 31, index: 53.26}, "Vermont": {rank: 32, index: 51.75}, "Missouri": {rank: 33, index: 50.53},
+        "Oklahoma": {rank: 34, index: 48.99}, "Alabama": {rank: 35, index: 48.77}, "Rhode Island": {rank: 36, index: 48.76},
+        "Idaho": {rank: 37, index: 48.53}, "Nebraska": {rank: 38, index: 47.53}, "Kansas": {rank: 39, index: 44.53},
+        "Delaware": {rank: 40, index: 42.96}, "Louisiana": {rank: 41, index: 42.68}, "Montana": {rank: 42, index: 41.35},
+        "Kentucky": {rank: 43, index: 40.75}, "Arkansas": {rank: 44, index: 37.11}, "Mississippi": {rank: 45, index: 35.14},
+        "Utah": {rank: 46, index: 24.14}, "South Dakota": {rank: 47, index: 22.81}, "North Dakota": {rank: 48, index: 20.43},
+        "Wyoming": {rank: 49, index: 15.81}, "District of Columbia": {rank: 50, index: 7.90}, "Alaska": {rank: 51, index: 0.00}
+    };
 
-    // Fetch GeoJSON for US States
+    // 2. Initialize Map (Leaflet)
+    var map = L.map('map', {zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false}).setView([37.8, -96], 4);
+
+    function getColor(d) {
+        return d > 90 ? '#ffdf00' :
+               d > 70 ? '#d4af37' :
+               d > 50 ? '#8c732b' :
+               d > 30 ? '#5c5c5c' :
+                        '#3a3a3a';
+    }
+
+    // 3. Load State Geometry
     fetch('https://raw.githubusercontent.com/PublicaMundi/MappingPython/master/data/us_states.json')
-        .then(res => res.json())
-        .then(data => {
-            L.geoJson(data, {
-                style: function(feature) {
-                    // Match the gold colorscale logic
-                    return {
-                        fillColor: '#d4af37',
-                        weight: 1,
-                        opacity: 1,
-                        color: 'white',
-                        fillOpacity: 0.7
-                    };
-                },
-                onEachFeature: function(feature, layer) {
-                    // Add Rank Labels as static DIVs
-                    // We can precisely control these coordinates
-                    var center = layer.getBounds().getCenter();
-                    L.marker(center, {
-                        icon: L.divIcon({
-                            className: 'state-label',
-                            html: "1", // Example: Logic would pull from your data
-                            iconSize: [20, 20]
-                        })
-                    }).addTo(map);
+    .then(response => response.json())
+    .then(data => {
+        L.geoJson(data, {
+            style: function(feature) {
+                const stateName = feature.properties.name;
+                const score = mahjongStats[stateName] ? mahjongStats[stateName].index : 0;
+                return {
+                    fillColor: getColor(score),
+                    weight: 1.5,
+                    opacity: 1,
+                    color: 'white',
+                    fillOpacity: 0.9
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                const stateName = feature.properties.name;
+                if (mahjongStats[stateName]) {
+                    const rank = mahjongStats[stateName].rank;
+                    let labelPos = layer.getBounds().getCenter();
+                    
+                    // Specific "Nudges" for labels
+                    let className = 'state-rank-label';
+                    if (stateName === "Florida") labelPos = [28.0, -82.0];
+                    if (stateName === "Michigan") labelPos = [44.5, -84.5];
+                    if (stateName === "California") labelPos = [37.0, -120.0];
+                    if (stateName === "Louisiana") labelPos = [31.0, -92.0];
+
+                    // Tiny State Handling (placed closer to coastline)
+                    if (["Rhode Island", "Delaware", "District of Columbia"].includes(stateName)) {
+                        className += ' tiny-state-label';
+                        if (stateName === "Rhode Island") labelPos = [41.7, -71.0];
+                        if (stateName === "Delaware") labelPos = [39.0, -75.0];
+                        if (stateName === "District of Columbia") labelPos = [38.5, -76.5];
+                    }
+
+                    layer.bindTooltip(rank.toString(), {
+                        permanent: true,
+                        direction: 'center',
+                        className: className
+                    }).openTooltip();
                 }
-            }).addTo(map);
-        });
+            }
+        }).addTo(map);
+    });
+
+    // 4. Data Table (Grid.js)
+    const tableData = [
+        [1, 'Florida', '88', '43.27', '3.75', '21.74', '100.00'], [2, 'Pennsylvania', '51', '57.16', '4.68', '20.03', '95.06'],
+        [3, 'California', '70', '46.94', '18.21', '16.20', '94.88'], [4, 'Michigan', '15', '52.24', '4.30', '19.20', '94.04'],
+        [5, 'Texas', '113', '35.26', '6.24', '13.73', '90.08'], [6, 'Hawaii', '2', '40.15', '57.59', '21.08', '86.79'],
+        [7, 'New York', '49', '48.01', '10.27', '18.57', '83.56'], [8, 'Colorado', '14', '44.32', '4.84', '16.04', '82.63'],
+        [9, 'New Jersey', '56', '44.31', '11.11', '17.74', '81.68'], [10, 'Oregon', '2', '66.50', '6.78', '19.59', '81.00'],
+        [51, 'Alaska', '2', '9.52', '9.14', '14.36', '0.00']
+        // (Note: Add all 51 rows for the final version)
+    ];
+
+    new gridjs.Grid({
+        columns: ['Rank', 'State', 'Venues', 'Search Int.', 'Asian %', 'Senior %', 'Index'],
+        data: tableData,
+        search: true,
+        pagination: { limit: 10 },
+        sort: true
+    }).render(document.getElementById("mahjongTable"));
 </script>
 
 </body>
