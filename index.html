@@ -10,16 +10,49 @@
     <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #1a1a1a; color: #ffffff; }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
+        }
         .container { max-width: 1100px; margin: 0 auto; }
-        header { text-align: center; padding: 30px 0; background: linear-gradient(180deg, #333, #000); border-bottom: 4px solid #d4af37; margin-bottom: 30px; }
-        h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
+        header { 
+            text-align: center; 
+            padding: 30px 0; 
+            background: linear-gradient(180deg, #333, #000); 
+            border-bottom: 4px solid #d4af37; 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0; 
+            color: #d4af37; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-size: 32px; 
+        }
         .sub-brand { color: #ccc; font-size: 14px; margin-top: 5px; }
-        .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; }
+        .box { 
+            background: #262626; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+            border: 1px solid #444; 
+        }
         #mahjongMap { width: 100%; height: 700px; }
+        
+        /* Table Styling */
         .gridjs-container { color: #333; }
-        .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; }
+        .gridjs-th { 
+            background-color: #d4af37 !important; 
+            color: #000 !important; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            font-size: 12px;
+        }
         .gridjs-td { background-color: #f9f9f9; }
+        .gridjs-search-input { border: 1px solid #d4af37 !important; }
     </style>
 </head>
 <body>
@@ -94,43 +127,46 @@
         [51, 'Alaska', 2, 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    // 1. Prepare Map Data
-    const locations = rawData.map(d => d[7]);
-    const zValues = rawData.map(d => d[6]);
-    const hoverText = rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index: ${d[6].toFixed(2)}`);
-    
-    // Fixed Annotations - Strictly removing arrows and markers
-    const annotations = rawData.map(d => ({
-        locationmode: 'USA-states',
-        locations: [d[7]],
-        text: d[0],
-        showarrow: false,
-        font: { size: 11, color: '#000000', family: 'Arial Black' }
-    }));
-
-    const mapData = [{
+    // 1. CHOROPLETH LAYER (Shading)
+    const choroplethLayer = {
         type: 'choropleth',
         locationmode: 'USA-states',
-        locations: locations,
-        z: zValues,
-        text: hoverText,
+        locations: rawData.map(d => d[7]),
+        z: rawData.map(d => d[6]),
         hoverinfo: 'text',
+        text: rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index: ${d[6].toFixed(2)}`),
         colorscale: [
-            [0, '#3a3a3a'],   // Background grey
+            [0, '#3a3a3a'],
             [0.2, '#5c5c5c'],
             [0.5, '#8c732b'],
-            [0.8, '#d4af37'], // Vegas Insider Gold
-            [1, '#ffdf00']    // Bright Gold highlight
+            [0.8, '#d4af37'],
+            [1, '#ffdf00']
         ],
+        marker: { line: { color: '#ffffff', width: 0.5 } },
+        showscale: true,
         colorbar: { 
             title: 'Index Score', 
             thickness: 20, 
-            tickcolor: '#ffffff', 
-            tickfont: {color: '#ffffff'}, 
-            outlinewidth: 0 
+            tickcolor: '#fff', 
+            tickfont: {color: '#fff'},
+            outlinewidth: 0
+        }
+    };
+
+    // 2. SCATTERGEO LAYER (Labels - Forced no markers)
+    const labelLayer = {
+        type: 'scattergeo',
+        locationmode: 'USA-states',
+        locations: rawData.map(d => d[7]),
+        text: rawData.map(d => d[0]), 
+        mode: 'text', // This prevents the black spots (markers)
+        textfont: {
+            family: 'Arial Black, sans-serif',
+            size: 10,
+            color: 'black'
         },
-        marker: { line: { color: '#ffffff', width: 0.5 } }
-    }];
+        hoverinfo: 'none' 
+    };
 
     const mapLayout = {
         geo: {
@@ -143,12 +179,13 @@
         },
         margin: { l: 0, r: 0, b: 0, t: 0 },
         paper_bgcolor: 'rgba(0,0,0,0)',
-        annotations: annotations
+        showlegend: false
     };
 
-    Plotly.newPlot('mahjongMap', mapData, mapLayout, {responsive: true});
+    // Final Map Render
+    Plotly.newPlot('mahjongMap', [choroplethLayer, labelLayer], mapLayout, {responsive: true});
 
-    // 2. Prepare Table Data
+    // 3. DATA TABLE
     new gridjs.Grid({
         columns: [
             { name: 'Rank', sort: true },
