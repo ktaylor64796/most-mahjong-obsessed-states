@@ -10,15 +10,47 @@
     <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; background-color: #1a1a1a; color: #ffffff; }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
+        }
         .container { max-width: 1100px; margin: 0 auto; }
-        header { text-align: center; padding: 30px 0; background: linear-gradient(180deg, #333, #000); border-bottom: 4px solid #d4af37; margin-bottom: 30px; }
-        h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
+        header { 
+            text-align: center; 
+            padding: 30px 0; 
+            background: linear-gradient(180deg, #333, #000); 
+            border-bottom: 4px solid #d4af37; 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0; 
+            color: #d4af37; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-size: 32px; 
+        }
         .sub-brand { color: #ccc; font-size: 14px; margin-top: 5px; }
-        .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; }
+        .box { 
+            background: #262626; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+            border: 1px solid #444; 
+        }
         #mahjongMap { width: 100%; height: 700px; }
+        
+        /* Table Styling */
         .gridjs-container { color: #333; }
-        .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+        .gridjs-th { 
+            background-color: #d4af37 !important; 
+            color: #000 !important; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            font-size: 12px;
+        }
         .gridjs-td { background-color: #f9f9f9; }
     </style>
 </head>
@@ -41,35 +73,60 @@
 
 <script>
     const rawData = [
-        [1, 'Florida', 88, 43.27, 3.75, 21.74, 100.00, 'FL'], [2, 'Pennsylvania', 51, 57.16, 4.68, 20.03, 95.06, 'PA'],
-        [3, 'California', 70, 46.94, 18.21, 16.20, 94.88, 'CA'], [4, 'Michigan', 15, 52.24, 4.30, 19.20, 94.04, 'MI'],
-        [5, 'Texas', 113, 35.26, 6.24, 13.73, 90.08, 'TX'], [6, 'Hawaii', 2, 40.15, 57.59, 21.08, 86.79, 'HI'],
-        [7, 'New York', 49, 48.01, 10.27, 18.57, 83.56, 'NY'], [8, 'Colorado', 14, 44.32, 4.84, 16.04, 82.63, 'CO'],
-        [9, 'New Jersey', 56, 44.31, 11.11, 17.74, 81.68, 'NJ'], [10, 'Oregon', 2, 66.50, 6.78, 19.59, 81.00, 'OR'],
-        [11, 'Wisconsin', 20, 56.08, 3.79, 19.11, 74.43, 'WI'], [12, 'Maine', 12, 53.80, 1.86, 22.99, 73.06, 'ME'],
-        [13, 'Ohio', 28, 52.06, 3.32, 18.74, 72.60, 'OH'], [14, 'Massachusetts', 38, 43.76, 8.42, 18.48, 70.62, 'MA'],
-        [15, 'Illinois', 39, 44.59, 7.09, 17.56, 69.54, 'IL'], [16, 'Arizona', 18, 51.42, 4.99, 19.30, 68.61, 'AZ'],
-        [17, 'Minnesota', 22, 50.61, 6.16, 17.83, 67.82, 'MN'], [18, 'Maryland', 16, 51.33, 8.02, 17.25, 65.70, 'MD'],
-        [19, 'Washington', 10, 49.72, 12.40, 17.12, 63.30, 'WA'], [20, 'New Mexico', 4, 53.57, 2.73, 19.80, 63.03, 'NM'],
-        [21, 'New Hampshire', 8, 47.89, 3.60, 20.79, 60.44, 'NH'], [22, 'South Carolina', 34, 38.60, 2.36, 19.32, 59.06, 'SC'],
-        [23, 'Nevada', 8, 47.39, 11.40, 17.40, 59.04, 'NV'], [24, 'Indiana', 14, 49.17, 3.26, 17.18, 58.29, 'IN'],
-        [25, 'Tennessee', 37, 39.31, 2.49, 17.43, 58.14, 'TN'], [26, 'North Carolina', 36, 38.67, 3.98, 17.61, 58.11, 'NC'],
-        [27, 'Iowa', 5, 50.47, 3.27, 18.58, 57.57, 'IA'], [28, 'Connecticut', 15, 41.87, 5.82, 19.10, 54.99, 'CT'],
-        [29, 'Virginia', 19, 41.37, 8.45, 17.20, 54.83, 'VA'], [30, 'West Virginia', 1, 45.77, 1.24, 21.51, 53.57, 'WV'],
-        [31, 'Georgia', 48, 32.26, 5.28, 15.38, 53.26, 'GA'], [32, 'Vermont', 12, 37.93, 2.73, 22.11, 51.75, 'VT'],
-        [33, 'Missouri', 12, 42.44, 2.90, 18.34, 50.53, 'MO'], [34, 'Oklahoma', 16, 41.87, 3.26, 16.62, 48.99, 'OK'],
-        [35, 'Alabama', 31, 33.61, 2.00, 18.25, 48.77, 'AL'], [36, 'Rhode Island', 5, 41.75, 4.45, 19.30, 48.76, 'RI'],
-        [37, 'Idaho', 2, 46.78, 2.56, 17.36, 48.53, 'ID'], [38, 'Nebraska', 3, 45.37, 3.44, 17.16, 47.53, 'NE'],
-        [39, 'Kansas', 7, 40.56, 3.97, 17.46, 44.53, 'KS'], [40, 'Delaware', 6, 33.63, 4.94, 21.25, 42.96, 'DE'],
-        [41, 'Louisiana', 22, 33.80, 2.35, 17.35, 42.68, 'LA'], [42, 'Montana', 3, 36.62, 1.66, 20.48, 41.35, 'MT'],
-        [43, 'Kentucky', 10, 36.78, 2.22, 17.82, 40.75, 'KY'], [44, 'Arkansas', 16, 31.18, 2.21, 17.97, 37.11, 'AR'],
-        [45, 'Mississippi', 15, 30.97, 1.52, 17.61, 35.14, 'MS'], [46, 'Utah', 8, 32.03, 3.79, 12.21, 24.14, 'UT'],
-        [47, 'South Dakota', 2, 25.42, 2.11, 18.37, 22.81, 'SD'], [48, 'North Dakota', 3, 24.98, 2.36, 17.01, 20.43, 'ND'],
-        [49, 'Wyoming', 2, 19.05, 1.64, 19.15, 15.81, 'WY'], [50, 'District of Columbia', 2, 19.38, 5.99, 13.07, 7.90, 'DC'],
+        [1, 'Florida', 88, 43.27, 3.75, 21.74, 100.00, 'FL'],
+        [2, 'Pennsylvania', 51, 57.16, 4.68, 20.03, 95.06, 'PA'],
+        [3, 'California', 70, 46.94, 18.21, 16.20, 94.88, 'CA'],
+        [4, 'Michigan', 15, 52.24, 4.30, 19.20, 94.04, 'MI'],
+        [5, 'Texas', 113, 35.26, 6.24, 13.73, 90.08, 'TX'],
+        [6, 'Hawaii', 2, 40.15, 57.59, 21.08, 86.79, 'HI'],
+        [7, 'New York', 49, 48.01, 10.27, 18.57, 83.56, 'NY'],
+        [8, 'Colorado', 14, 44.32, 4.84, 16.04, 82.63, 'CO'],
+        [9, 'New Jersey', 56, 44.31, 11.11, 17.74, 81.68, 'NJ'],
+        [10, 'Oregon', 2, 66.50, 6.78, 19.59, 81.00, 'OR'],
+        [11, 'Wisconsin', 20, 56.08, 3.79, 19.11, 74.43, 'WI'],
+        [12, 'Maine', 12, 53.80, 1.86, 22.99, 73.06, 'ME'],
+        [13, 'Ohio', 28, 52.06, 3.32, 18.74, 72.60, 'OH'],
+        [14, 'Massachusetts', 38, 43.76, 8.42, 18.48, 70.62, 'MA'],
+        [15, 'Illinois', 39, 44.59, 7.09, 17.56, 69.54, 'IL'],
+        [16, 'Arizona', 18, 51.42, 4.99, 19.30, 68.61, 'AZ'],
+        [17, 'Minnesota', 22, 50.61, 6.16, 17.83, 67.82, 'MN'],
+        [18, 'Maryland', 16, 51.33, 8.02, 17.25, 65.70, 'MD'],
+        [19, 'Washington', 10, 49.72, 12.40, 17.12, 63.30, 'WA'],
+        [20, 'New Mexico', 4, 53.57, 2.73, 19.80, 63.03, 'NM'],
+        [21, 'New Hampshire', 8, 47.89, 3.60, 20.79, 60.44, 'NH'],
+        [22, 'South Carolina', 34, 38.60, 2.36, 19.32, 59.06, 'SC'],
+        [23, 'Nevada', 8, 47.39, 11.40, 17.40, 59.04, 'NV'],
+        [24, 'Indiana', 14, 49.17, 3.26, 17.18, 58.29, 'IN'],
+        [25, 'Tennessee', 37, 39.31, 2.49, 17.43, 58.14, 'TN'],
+        [26, 'North Carolina', 36, 38.67, 3.98, 17.61, 58.11, 'NC'],
+        [27, 'Iowa', 5, 50.47, 3.27, 18.58, 57.57, 'IA'],
+        [28, 'Connecticut', 15, 41.87, 5.82, 19.10, 54.99, 'CT'],
+        [29, 'Virginia', 19, 41.37, 8.45, 17.20, 54.83, 'VA'],
+        [30, 'West Virginia', 1, 45.77, 1.24, 21.51, 53.57, 'WV'],
+        [31, 'Georgia', 48, 32.26, 5.28, 15.38, 53.26, 'GA'],
+        [32, 'Vermont', 12, 37.93, 2.73, 22.11, 51.75, 'VT'],
+        [33, 'Missouri', 12, 42.44, 2.90, 18.34, 50.53, 'MO'],
+        [34, 'Oklahoma', 16, 41.87, 3.26, 16.62, 48.99, 'OK'],
+        [35, 'Alabama', 31, 33.61, 2.00, 18.25, 48.77, 'AL'],
+        [36, 'Rhode Island', 5, 41.75, 4.45, 19.30, 48.76, 'RI'],
+        [37, 'Idaho', 2, 46.78, 2.56, 17.36, 48.53, 'ID'],
+        [38, 'Nebraska', 3, 45.37, 3.44, 17.16, 47.53, 'NE'],
+        [39, 'Kansas', 7, 40.56, 3.97, 17.46, 44.53, 'KS'],
+        [40, 'Delaware', 6, 33.63, 4.94, 21.25, 42.96, 'DE'],
+        [41, 'Louisiana', 22, 33.80, 2.35, 17.35, 42.68, 'LA'],
+        [42, 'Montana', 3, 36.62, 1.66, 20.48, 41.35, 'MT'],
+        [43, 'Kentucky', 10, 36.78, 2.22, 17.82, 40.75, 'KY'],
+        [44, 'Arkansas', 16, 31.18, 2.21, 17.97, 37.11, 'AR'],
+        [45, 'Mississippi', 15, 30.97, 1.52, 17.61, 35.14, 'MS'],
+        [46, 'Utah', 8, 32.03, 3.79, 12.21, 24.14, 'UT'],
+        [47, 'South Dakota', 2, 25.42, 2.11, 18.37, 22.81, 'SD'],
+        [48, 'North Dakota', 3, 24.98, 2.36, 17.01, 20.43, 'ND'],
+        [49, 'Wyoming', 2, 19.05, 1.64, 19.15, 15.81, 'WY'],
+        [50, 'District of Columbia', 2, 19.38, 5.99, 13.07, 7.90, 'DC'],
         [51, 'Alaska', 2, 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    // Main Map Layer
+    // 1. CHOROPLETH LAYER (Shading)
     const choroplethLayer = {
         type: 'choropleth',
         locationmode: 'USA-states',
@@ -77,21 +134,40 @@
         z: rawData.map(d => d[6]),
         hoverinfo: 'text',
         text: rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index: ${d[6].toFixed(2)}`),
-        colorscale: [[0, '#3a3a3a'], [0.2, '#5c5c5c'], [0.5, '#8c732b'], [0.8, '#d4af37'], [1, '#ffdf00']],
-        marker: { line: { color: '#ffffff', width: 0.8 } },
-        zmin: 0, zmax: 100,
-        colorbar: { title: 'Index Score', thickness: 20, tickcolor: '#fff', tickfont: {color: '#fff'}, outlinewidth: 0 }
+        colorscale: [
+            [0, '#3a3a3a'],
+            [0.2, '#5c5c5c'],
+            [0.5, '#8c732b'],
+            [0.8, '#d4af37'],
+            [1, '#ffdf00']
+        ],
+        marker: { line: { color: '#ffffff', width: 0.5 } },
+        showscale: true,
+        colorbar: { 
+            title: 'Index Score', 
+            thickness: 20, 
+            tickcolor: '#fff', 
+            tickfont: {color: '#fff'},
+            outlinewidth: 0
+        }
     };
 
-    // Label Layer (Scattergeo) - This handles labels WITHOUT markers
+    // 2. SCATTERGEO LAYER (Labels - Excluding tiny states for manual positioning)
+    const mainStates = rawData.filter(d => !['RI', 'DE', 'DC'].includes(d[7]));
+
     const labelLayer = {
         type: 'scattergeo',
         locationmode: 'USA-states',
-        locations: rawData.map(d => d[7]),
-        text: rawData.map(d => d[0]),
-        mode: 'text',
-        textfont: { family: 'Arial Black, sans-serif', size: 9, color: 'black' },
-        hoverinfo: 'none'
+        locations: mainStates.map(d => d[7]),
+        text: mainStates.map(d => d[0]), 
+        mode: 'text', 
+        marker: { size: 0, opacity: 0, color: 'rgba(0,0,0,0)' }, // Kills spots on FL/UT
+        textfont: {
+            family: 'Arial Black, sans-serif',
+            size: 10,
+            color: 'black'
+        },
+        hoverinfo: 'none' 
     };
 
     const mapLayout = {
@@ -105,22 +181,55 @@
         },
         margin: { l: 0, r: 0, b: 0, t: 0 },
         paper_bgcolor: 'rgba(0,0,0,0)',
-        // Annotations for Tiny States (Manually shifting labels so they don't look like splotches)
+        showlegend: false,
+        // MANUAL PLACEMENT: Moving RI, DE, and DC closer to their landmasses
         annotations: [
-            { x: 0.93, y: 0.55, text: 'DC (50)', showarrow: true, arrowhead: 0, ax: 40, ay: 0, font: {color: 'white'} },
-            { x: 0.91, y: 0.63, text: 'RI (36)', showarrow: true, arrowhead: 0, ax: 35, ay: -10, font: {color: 'white'} },
-            { x: 0.90, y: 0.58, text: 'DE (40)', showarrow: true, arrowhead: 0, ax: 35, ay: 10, font: {color: 'white'} }
+            {
+                xref: 'paper', yref: 'paper',
+                x: 0.88, y: 0.60, // Nudging RI closer
+                text: '<b>36</b>', 
+                showarrow: false,
+                font: { family: 'Arial Black', size: 9, color: 'white' }
+            },
+            {
+                xref: 'paper', yref: 'paper',
+                x: 0.86, y: 0.53, // Nudging DE closer
+                text: '<b>40</b>',
+                showarrow: false,
+                font: { family: 'Arial Black', size: 9, color: 'white' }
+            },
+            {
+                xref: 'paper', yref: 'paper',
+                x: 0.84, y: 0.49, // Nudging DC closer
+                text: '<b>50</b>',
+                showarrow: false,
+                font: { family: 'Arial Black', size: 9, color: 'white' }
+            }
         ]
     };
 
-    Plotly.newPlot('mahjongMap', [choroplethLayer, labelLayer], mapLayout, {responsive: true});
+    // Final Map Render
+    Plotly.newPlot('mahjongMap', [choroplethLayer, labelLayer], mapLayout, {responsive: true, displayModeBar: false});
 
+    // 3. DATA TABLE
     new gridjs.Grid({
-        columns: ['Rank', 'State', 'Venues', 'Search Int.', 'Asian %', 'Senior %', 'Index'],
+        columns: [
+            { name: 'Rank', sort: true },
+            { name: 'State', sort: true },
+            { name: 'Venues', sort: true },
+            { name: 'Search Int.', sort: true },
+            { name: 'Asian %', sort: true },
+            { name: 'Senior %', sort: true },
+            { name: 'Index', sort: true }
+        ],
         data: rawData.map(r => r.slice(0, 7)),
         search: true,
         pagination: { limit: 15 },
-        style: { table: { border: '1px solid #444' }, th: { 'text-align': 'center' }, td: { 'text-align': 'center' } }
+        style: {
+            table: { border: '1px solid #444' },
+            th: { 'text-align': 'center' },
+            td: { 'text-align': 'center' }
+        }
     }).render(document.getElementById("mahjongTable"));
 </script>
 
