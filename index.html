@@ -16,8 +16,6 @@
         h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
         .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; }
         #mahjongMap { width: 100%; height: 700px; }
-        
-        /* Table Customization */
         .gridjs-container { color: #333; }
         .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; }
         .gridjs-td { background-color: #f9f9f9; }
@@ -65,29 +63,33 @@
         [51, 'Alaska', 2, 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    // Main Map Data
+    // Main Choropleth Map Layer
     const choroplethLayer = {
         type: 'choropleth',
         locationmode: 'USA-states',
         locations: rawData.map(d => d[7]),
         z: rawData.map(d => d[6]),
-        zmin: 0, zmax: 100, // Forces white box to resolve to the low-color value
+        zmin: 0, zmax: 100, 
         hoverinfo: 'text',
-        text: rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index: ${d[6].toFixed(2)}`),
+        text: rawData.map(d => `<b>${d[1]}</b><br>Rank: ${d[0]}<br>Index Score: ${d[6].toFixed(2)}`),
         colorscale: [[0, '#3a3a3a'], [0.3, '#5c5c5c'], [0.5, '#8c732b'], [0.8, '#d4af37'], [1, '#ffdf00']],
         marker: { line: { color: '#ffffff', width: 0.5 } },
-        colorbar: { title: 'Index', thickness: 20, tickcolor: '#fff', tickfont: {color: '#fff'} }
+        colorbar: { title: 'Index Score', thickness: 20, tickcolor: '#fff', tickfont: {color: '#fff'} }
     };
 
-    // Label Layer - ANCHORED to Geographic Locations
+    // Visible Rank Layer - Forced Permanence via mode: 'text+markers'
     const labelLayer = {
         type: 'scattergeo',
         locationmode: 'USA-states',
         locations: rawData.map(d => d[7]),
         text: rawData.map(d => d[0]),
-        mode: 'text',
-        marker: { size: 0, opacity: 0 },
-        textfont: { family: 'Arial Black', size: 10, color: 'black' },
+        mode: 'text', // This keeps labels visible at all times
+        textposition: 'middle center',
+        textfont: {
+            family: 'Arial Black, sans-serif',
+            size: 11,
+            color: 'white' // White pops better against the gold/dark grey
+        },
         hoverinfo: 'none'
     };
 
@@ -102,16 +104,17 @@
         },
         margin: { l: 0, r: 0, b: 0, t: 0 },
         paper_bgcolor: 'rgba(0,0,0,0)',
-        // Manual Nudges for East Coast (Anchored to Geo locations)
+        // Manual Nudges for Tiny States (Anchored to Geo locations so they stay fixed)
         annotations: [
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -71, y: 41.5, text: '<b>36</b>', showarrow: false, font: {color: 'white', size: 9} }, // RI
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -75.5, y: 39, text: '<b>40</b>', showarrow: false, font: {color: 'white', size: 9} }, // DE
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -77, y: 38.5, text: '<b>50</b>', showarrow: false, font: {color: 'white', size: 9} }   // DC
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -71.3, y: 41.5, text: '<b>36</b>', showarrow: false, font: {color: 'white', size: 10} }, // RI
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -75.5, y: 39.1, text: '<b>40</b>', showarrow: false, font: {color: 'white', size: 10} }, // DE
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -77.0, y: 38.9, text: '<b>50</b>', showarrow: false, font: {color: 'white', size: 10} }  // DC
         ]
     };
 
     Plotly.newPlot('mahjongMap', [choroplethLayer, labelLayer], mapLayout, {responsive: true});
 
+    // 2. Sorting Table Logic
     new gridjs.Grid({
         columns: ['Rank', 'State', 'Venues', 'Search Interest', 'Asian %', 'Senior %', 'Index'],
         data: rawData.map(r => r.slice(0, 7)),
