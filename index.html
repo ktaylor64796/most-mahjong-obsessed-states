@@ -16,6 +16,11 @@
         h1 { margin: 0; color: #d4af37; text-transform: uppercase; letter-spacing: 2px; font-size: 32px; }
         .box { background: #262626; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #444; }
         #mahjongMap { width: 100%; height: 700px; }
+        
+        /* THE CRITICAL FIX: Makes the numbers "ghost-like" so the mouse hits the state instead */
+        .js-plotly-plot .plotly .cursor-pointer { cursor: crosshair; }
+        text.textpoint { pointer-events: none !important; }
+
         .gridjs-container { color: #333; }
         .gridjs-th { background-color: #d4af37 !important; color: #000 !important; font-weight: bold; }
         .gridjs-td { background-color: #f9f9f9; }
@@ -63,7 +68,7 @@
         [51, 'Alaska', 2, 9.52, 9.14, 14.36, 0.00, 'AK']
     ];
 
-    // Main Choropleth Map Layer
+    // Main Map Data
     const choroplethLayer = {
         type: 'choropleth',
         locationmode: 'USA-states',
@@ -77,19 +82,14 @@
         colorbar: { title: 'Index Score', thickness: 20, tickcolor: '#fff', tickfont: {color: '#fff'} }
     };
 
-    // Visible Rank Layer - Forced Permanence via mode: 'text+markers'
+    // Label Layer - Ghost Layer (Pointer events disabled in CSS)
     const labelLayer = {
         type: 'scattergeo',
         locationmode: 'USA-states',
         locations: rawData.map(d => d[7]),
         text: rawData.map(d => d[0]),
-        mode: 'text', // This keeps labels visible at all times
-        textposition: 'middle center',
-        textfont: {
-            family: 'Arial Black, sans-serif',
-            size: 11,
-            color: 'white' // White pops better against the gold/dark grey
-        },
+        mode: 'text',
+        textfont: { family: 'Arial Black, sans-serif', size: 10, color: 'white' },
         hoverinfo: 'none'
     };
 
@@ -104,11 +104,11 @@
         },
         margin: { l: 0, r: 0, b: 0, t: 0 },
         paper_bgcolor: 'rgba(0,0,0,0)',
-        // Manual Nudges for Tiny States (Anchored to Geo locations so they stay fixed)
         annotations: [
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -71.3, y: 41.5, text: '<b>36</b>', showarrow: false, font: {color: 'white', size: 10} }, // RI
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -75.5, y: 39.1, text: '<b>40</b>', showarrow: false, font: {color: 'white', size: 10} }, // DE
-            { xref: 'geo', yref: 'geo', geo: 'usa', x: -77.0, y: 38.9, text: '<b>50</b>', showarrow: false, font: {color: 'white', size: 10} }  // DC
+            // East Coast nudges shifted back to Geo for anchoring
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -71.3, y: 41.5, text: '<b>36</b>', showarrow: false, font: {color: 'white', size: 10}, captureevents: false },
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -75.5, y: 39.1, text: '<b>40</b>', showarrow: false, font: {color: 'white', size: 10}, captureevents: false },
+            { xref: 'geo', yref: 'geo', geo: 'usa', x: -77.0, y: 38.9, text: '<b>50</b>', showarrow: false, font: {color: 'white', size: 10}, captureevents: false }
         ]
     };
 
